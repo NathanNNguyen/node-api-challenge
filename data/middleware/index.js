@@ -43,8 +43,8 @@ exports.validateAction = (req, res, next) => {
   const action = req.body;
   if (!action) {
     res.status(400).json({ message: 'Missing data' })
-  } else if (!action.description || !action.notes) {
-    res.status(400).json({ message: 'Missing required field' })
+  } else if (!action.description || !action.notes || !action.project_id) {
+    res.status(400).json({ message: 'Missing required field or project_id does not exist' })
   } else {
     next()
   }
