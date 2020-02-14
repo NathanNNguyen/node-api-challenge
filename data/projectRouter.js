@@ -1,27 +1,19 @@
 const express = require('express');
 const Projects = require('./helpers/projectModel');
-const actionRouter = require('./actionRouter')
+const Actions = require('./helpers/actionModel');
 const router = express.Router();
-const { logger, validateProject, validateProjectId } = require('./middleware');
+const { logger, validateProject, validateProjectId, validateAction } = require('./middleware');
 
-router.use('/:id/actions', actionRouter);
-
-router.get('/:id', logger, validateProjectId, async (req, res) => {
-  const { id } = req.params;
-  const project = await Projects.get(id);
-  try {
-    res.status(200).json(project)
-  }
-  catch {
-    res.status(500).json({ message: 'Internal error' })
-  }
+router.get('/:id', logger, validateProjectId, (req, res) => {
+  const project = req.project
+  res.status(200).json(project)
 })
 
 router.get('/:id/actions', logger, validateProjectId, async (req, res) => {
   const { id } = req.params;
-  const project = await Projects.getProjectActions(id)
+  const actions = await Projects.getProjectActions(id)
   try {
-    res.status(200).json({ project_id: id, ...project })
+    res.status(200).json(actions)
   } catch {
     res.status(500).json({ message: 'Internal error' })
   }
@@ -55,6 +47,18 @@ router.put('/:id', logger, validateProjectId, validateProject, async (req, res) 
     res.status(200).json(updated)
   } catch {
     res.status(500).json({ message: 'Internal error' })
+  }
+})
+
+// action post
+router.post('/:projectID/actions', logger, validateProjectId, validateAction, async (req, res) => {
+  const { projectID } = req.params;
+  const action = req.body;
+  try {
+    const inserted = await Actions.insert({ ...action, project_id: projectID })
+    res.status(200).json(inserted)
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 

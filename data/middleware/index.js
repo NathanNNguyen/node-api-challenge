@@ -11,10 +11,15 @@ exports.logger = (req, res, next) => {
 exports.validateProjectId = async (req, res, next) => {
   const { id } = req.params;
   const project = await Projects.get(id);
-  if (!project) {
-    res.status(404).json({ message: 'Invalid id' })
-  } else {
+  try {
+    if (!project) {
+      res.status(404).json({ message: 'Invalid id' })
+    } else {
+      req.project = project
+    }
     next()
+  } catch {
+    res.status(500).json({ message: 'Internal error' })
   }
 }
 
@@ -32,10 +37,15 @@ exports.validateProject = (req, res, next) => {
 exports.validateActionId = async (req, res, next) => {
   const { id } = req.params;
   const action = await Actions.get(id);
-  if (!action) {
-    res.status(404).json({ message: 'Invalid id' })
-  } else {
+  try {
+    if (!action) {
+      res.status(404).json({ message: 'Invalid id' })
+    } else {
+      req.action = action
+    }
     next();
+  } catch{
+    res.status(500).json({ message: 'Internal error' })
   }
 }
 
@@ -43,8 +53,8 @@ exports.validateAction = (req, res, next) => {
   const action = req.body;
   if (!action) {
     res.status(400).json({ message: 'Missing data' })
-  } else if (!action.description || !action.notes || !action.project_id) {
-    res.status(400).json({ message: 'Missing required field or project_id does not exist' })
+  } else if (!action.description || !action.notes) {
+    res.status(400).json({ message: 'Missing required field' })
   } else {
     next()
   }
