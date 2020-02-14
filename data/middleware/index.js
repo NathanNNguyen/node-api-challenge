@@ -18,8 +18,8 @@ exports.validateProjectId = async (req, res, next) => {
       req.project = project
     }
     next()
-  } catch {
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 }
 
@@ -44,8 +44,8 @@ exports.validateActionId = async (req, res, next) => {
       req.action = action
     }
     next();
-  } catch{
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 }
 

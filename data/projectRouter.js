@@ -14,8 +14,8 @@ router.get('/:id/actions', logger, validateProjectId, async (req, res) => {
   const actions = await Projects.getProjectActions(id)
   try {
     res.status(200).json(actions)
-  } catch {
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 
@@ -24,8 +24,8 @@ router.post('/', logger, validateProject, async (req, res) => {
   try {
     const inserted = await Projects.insert(project)
     res.status(200).json(inserted)
-  } catch{
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 
@@ -34,8 +34,8 @@ router.delete('/:id', logger, validateProjectId, async (req, res) => {
   try {
     const removed = await Projects.remove(id)
     res.status(200).json(removed)
-  } catch {
-    res.status(500).json({ message: 'Interrnal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Interrnal error', err })
   }
 })
 
@@ -45,8 +45,8 @@ router.put('/:id', logger, validateProjectId, validateProject, async (req, res) 
   try {
     const updated = await Projects.update(id, project)
     res.status(200).json(updated)
-  } catch {
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 

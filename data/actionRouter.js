@@ -15,8 +15,8 @@ router.put('/:id', logger, validateActionId, validateAction, async (req, res) =>
   try {
     const updated = await Actions.update(id, action);
     res.status(200).json(updated);
-  } catch{
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 
@@ -25,8 +25,8 @@ router.delete('/:id', logger, validateActionId, async (req, res) => {
   try {
     const removed = await Actions.remove(id)
     res.status(200).json(removed);
-  } catch {
-    res.status(500).json({ message: 'Internal error' })
+  } catch (err) {
+    res.status(500).json({ message: 'Internal error', err })
   }
 })
 
